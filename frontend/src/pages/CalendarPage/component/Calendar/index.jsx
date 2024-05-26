@@ -4,12 +4,13 @@ import "react-calendar/dist/Calendar.css";
 import "./index.css";
 
 const emojiMap = {
-  bad: "/assets/status/bad.png",
-  cry: "/assets/status/cry.png",
-  ji: "/assets/status/ji.png",
-  ok: "/assets/status/ok.png",
-  really_love: "/assets/status/really_love.png",
-  want: "/assets/status/want.png",
+  1: "/assets/status/1.png",
+  2: "/assets/status/2.png",
+  3: "/assets/status/3.png",
+  4: "/assets/status/4.png",
+  5: "/assets/status/5.png",
+  6: "/assets/status/6.png",
+  7: "/assets/status/7.png",
 };
 
 const CustomCalendar = ({ onDateChange, exerciseData }) => {
@@ -34,7 +35,7 @@ const CustomCalendar = ({ onDateChange, exerciseData }) => {
           <div className="calendar-emoji-container">
             <img
               src={emojiSrc}
-              alt={exerciseInfo.emotion}
+              alt={`Emotion ${exerciseInfo.emotion}`}
               className="calendar-emoji"
             />
           </div>

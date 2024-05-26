@@ -1,225 +1,160 @@
-import React, { useState }  from 'react';
+import React, { useState } from 'react';
+import { logoutUser } from '../../store/thunkFunctions';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const MyPage = () => {
-    const [name, setName] = useState('byeonwoojin00');
-    const [nickname, setNickname] = useState('변우진');
+    const [name, setName] = useState('Fitlm');
+    const [nickname, setNickname] = useState('핏-름');
     const [height, setHeight] = useState('178.5');
     const [weight, setWeight] = useState('73.5');
     const [muscle, setMuscle] = useState('34.2');
     const [fat, setFat] = useState('19.2');
+    const [inputBoxColor] = useState('#FCF5F3');
 
+    
 
-    const [editingName, setEditingName] = useState(false);
-    const [editingNickname, setEditingNickname] = useState(false);
-    const [editingHeight, setEditingHeight] = useState(false);
-    const [editingWeight, setEditingWeight] = useState(false);
-    const [editingMuscle, setEditingMuscle] = useState(false);
-    const [editingFat, setEditingFat] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
 
-    const handleNameChange = () => {
-        setEditingName(!editingName); // 팝업 형태로 화면을 토글합니다.
+    const handleEdit = () => {
+        setIsEditing(!isEditing);
     };
 
-    const handleNicknameChange = () => {
-        setEditingNickname(!editingNickname);
-    };
+    const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-    const handleHeightChange = () => {
-        setEditingHeight(!editingHeight);
-    };
-
-    const handleWeightChange = () => {
-        setEditingWeight(!editingWeight);
-    };
-    const handleMuscleChange = () => {
-        setEditingMuscle(!editingMuscle);
-    };    
-    const handleFatChange = () => {
-        setEditingFat(!editingFat);
-    };
-    // const saveNickname = (newNickname) => {
-    //     setNickname(newNickname); // 새로운 닉네임으로 변경
-    //     setEditingNickname(false); // 팝업 형태의 입력 폼 닫기
-    // };
+  const handleLogout = () => {
+    dispatch(logoutUser()).then(() => {
+      navigate("/login");
+    });
+  };
 
     return (
-        <section className="bg-[#e2d7d2]">
-            <div className="max-w-4xl mx-auto p-8">
-                <h2 className="text-2xl font-bold mb-4">마이페이지</h2>
-                <h3 className="text-xl font-bold mb-4">프로필 편집</h3>
-
-                <div className="bg-[#F1EBE9] p-6 rounded-lg shadow-md">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                            <img
-                                src="images/FITLM.jpg"
-                                alt=""
-                                style={{
-                                    width: '70px',
-                                    height: '70px',
-                                    borderRadius: '50%',
-                                    marginRight: '10px', // 이미지와 버튼 사이의 간격 조절
-                                }}
-                            />
-                            <button className="bg-[#B09C93] rounded-lg p-2 ml-3" style={{ fontSize: '0.5rem', minWidth: '85px', fontWeight: 'bold' }}>사진 변경</button>
+        <div className='h-full w-full flex flex-col items-center justify-center'>
+        <section className="h-4/5 w-4/5 bg-light-color rounded-lg">
+            <div className="max-w-6xl mx-auto p-10">
+                <div className="flex justify-center items-center p-6">
+                    <div className="flex items-center relative" style={{width:'800px'}}>
+                        <img
+                            src="images/FITLM.jpg"
+                            alt=""
+                            style={{
+                                width: '80px',
+                                height: '80px',
+                                borderRadius: '50%',
+                                marginRight: '20px',
+                                cursor : 'pointer',
+                            }}
+                        />
+                        <div className="flex flex-col justify-center" style={{ flex: 1 }}>
+                            {isEditing ? (
+                                <input
+                                    type="text"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    className="mb-1 text-xl font-bold"
+                                    style={{ backgroundColor: 'transparent', color: '#B09C93', border: 'none', height: '2rem' }}
+                                />
+                            ) : (
+                                <p className='mb-1 text-xl font-bold text-[#401C0C]'>{name}</p>
+                            )}
+                            {isEditing ? (
+                                <input
+                                    type="text"
+                                    value={nickname}
+                                    onChange={(e) => setNickname(e.target.value)}
+                                    className="text-sm"
+                                    style={{ backgroundColor: 'transparent', color: '#B09C93', border: 'none', height: '1.5rem' }}
+                                />
+                            ) : (
+                                <p className='text-sm text-[#401C0C] pt-1'>{nickname}</p>
+                            )}
                         </div>
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className='mb-3'>{name}</p>
-                                <p style={{ fontSize: '0.8rem', color: '#777', textAlign: 'right' }}>{nickname}</p>
-                            </div>
-                            <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                <button className="bg-[#B09C93] rounded-lg p-2 ml-3 mb-3" style={{ fontSize: '0.5rem', minWidth: '85px', fontWeight: 'bold' }} onClick={handleNameChange}>아이디 변경</button>
-                                <button className="bg-[#B09C93] rounded-lg p-2 ml-3" style={{ fontSize: '0.5rem', minWidth: '85px', fontWeight: 'bold' }} onClick={handleNicknameChange}>닉네임 변경</button>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
 
-                {/* 팝업 형태의 이름 변경 입력 폼 */}
-                {editingName && (
-                    <div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
-                        <div className="bg-white p-8 rounded-lg shadow-md">
-                            <h3 className="text-xl font-bold mb-4">이름 변경</h3>
-                            <input
-                                type="text"
-                                className="w-full border border-gray-300 rounded-md p-2 mb-4"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                            />
-                            <div className="flex justify-end">
-                                <button className="bg-[#B09C93] text-white rounded-lg p-2" onClick={handleNameChange}>저장</button>
-                            </div>
+                <div className="flex justify-between mt-4">
+                    <div className="w-[48%] border-2 border-[#E2D7D2] rounded-2xl overflow-hidden">
+                        <div className="bg-[#FCF5F3] p-4 h-16 flex items-center">
+                            <p className="text-[#401C0C] font-bold w-1/4">키</p>
+                            {isEditing ? (
+                                <input
+                                    type="text"
+                                    value={height}
+                                    onChange={(e) => setHeight(e.target.value)}
+                                    style={{ backgroundColor: inputBoxColor, color: '#B09C93', border: 'none' }}
+                                />
+                            ) : (
+                                <p>{height}cm</p>
+                            )}
                         </div>
                     </div>
-                )}
-                {editingNickname && (
-                    <div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
-                        <div className="bg-white p-8 rounded-lg shadow-md">
-                            <h3 className="text-xl font-bold mb-4">닉네임 변경</h3>
-                            <input
-                                type="text"
-                                className="w-full border border-gray-300 rounded-md p-2 mb-4"
-                                value={nickname}
-                                onChange={(e) => setNickname(e.target.value)}
-                            />
-                            <div className="flex justify-end">
-                                <button className="bg-[#B09C93] text-white rounded-lg p-2" onClick={handleNicknameChange}>저장</button>
-                            </div>
-                        </div>
-                    </div>
-                )}
 
-            <h3 className="text-xl font-bold mt-6 mb-4">설정</h3>
-                <div className="bg-[#F1EBE9] p-6 rounded-lg shadow-md">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <div className="flex flex-col">
-                                <div className="flex justify-between mb-3">
-                                    <p>{height} cm</p>
-                                    {/* 버튼 기능들 추가해야됨 */}
-                                    <button className="bg-[#B09C93] rounded-lg p-2 ml-3" style={{ fontSize: '0.5rem', minWidth: '85px', fontWeight: 'bold' }} onClick={handleHeightChange}>키</button>
-                                </div>
-                                <div className="flex justify-between">
-                                    <p>{weight} kg</p>
-                                    {/* 버튼 기능들 추가해야됨 */}
-                                    <button className="bg-[#B09C93] rounded-lg p-2 ml-3" style={{ fontSize: '0.5rem', minWidth: '85px', fontWeight: 'bold' }} onClick={handleWeightChange}>몸무게</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div className="flex flex-col">
-                                <div className="flex justify-between mb-3">
-                                    <p>{muscle} kg</p>
-                                    {/* 버튼 기능들 추가해야됨 */}
-                                    <button className="bg-[#B09C93] rounded-lg p-2 ml-3" style={{ fontSize: '0.5rem', minWidth: '85px', fontWeight: 'bold' }} onClick={handleMuscleChange}>골격근량</button>
-                                </div>
-                                <div className="flex justify-between">
-                                    <p>{fat} %</p>
-                                    {/* 버튼 기능들 추가해야됨 */}
-                                    <button className="bg-[#B09C93] rounded-lg p-2 ml-3" style={{ fontSize: '0.5rem', minWidth: '85px', fontWeight: 'bold' }} onClick={handleFatChange}>체지방률</button>
-                                </div>
-                            </div>
+                    <div className="w-[48%] border-2 border-[#E2D7D2] rounded-2xl overflow-hidden">
+                        <div className="bg-[#FCF5F3] p-4 h-16 flex items-center">
+                            <p className="text-[#401C0C] font-bold w-1/4">몸무게</p>
+                            {isEditing ? (
+                                <input
+                                    type="text"
+                                    value={weight}
+                                    onChange={(e) => setWeight(e.target.value)}
+                                    style={{ backgroundColor: inputBoxColor, color: '#B09C93', border: 'none' }}
+                                />
+                            ) : (
+                                <p>{weight}kg</p>
+                            )}
                         </div>
                     </div>
-                    {editingHeight && (
-                    <div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
-                        <div className="bg-white p-8 rounded-lg shadow-md">
-                            <h3 className="text-xl font-bold mb-4">키</h3>
-                            <input
-                                type="text"
-                                className="w-full border border-gray-300 rounded-md p-2 mb-4"
-                                value={height}
-                                onChange={(e) => setHeight(e.target.value)}
-                            />
-                            <div className="flex justify-end">
-                                <button className="bg-[#B09C93] text-white rounded-lg p-2" onClick={handleHeightChange}>저장</button>
-                            </div>
+                </div>
+
+                <div className="flex justify-between mt-4">
+                    <div className="w-[48%] border-2 border-[#E2D7D2] rounded-2xl overflow-hidden">
+                        <div className="bg-[#FCF5F3] p-4 h-16 flex items-center">
+                            <p className="text-[#401C0C] font-bold w-1/4">골격근량</p>
+                            {isEditing ? (
+                                <input
+                                    type="text"
+                                    value={muscle}
+                                    onChange={(e) => setMuscle(e.target.value)}
+                                    style={{ backgroundColor: inputBoxColor, color: '#B09C93', border: 'none' }}
+                                />
+                            ) : (
+                                <p>{muscle}kg</p>
+                            )}
                         </div>
                     </div>
-                )}
-                    {editingWeight && (
-                    <div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
-                        <div className="bg-white p-8 rounded-lg shadow-md">
-                            <h3 className="text-xl font-bold mb-4">몸무게</h3>
-                            <input
-                                type="text"
-                                className="w-full border border-gray-300 rounded-md p-2 mb-4"
-                                value={weight}
-                                onChange={(e) => setWeight(e.target.value)}
-                            />
-                            <div className="flex justify-end">
-                                <button className="bg-[#B09C93] text-white rounded-lg p-2" onClick={handleWeightChange}>저장</button>
-                            </div>
+                    <div className="w-[48%] border-2 border-[#E2D7D2] rounded-2xl overflow-hidden">
+                        <div className="bg-[#FCF5F3] p-4 h-16 flex items-center">
+                            <p className="text-[#401C0C] font-bold w-1/4">체지방률</p>
+                            {isEditing ? (
+                                <input
+                                    type="text"
+                                    value={fat}
+                                    onChange={(e) => setFat(e.target.value)}
+                                    style={{ backgroundColor: inputBoxColor, color: '#B09C93', border: 'none' }}
+                                />
+                            ) : (
+                                <p>{fat}%</p>
+                            )}
                         </div>
                     </div>
-                )}
-                {editingMuscle && (
-                    <div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
-                        <div className="bg-white p-8 rounded-lg shadow-md">
-                            <h3 className="text-xl font-bold mb-4">골격근량</h3>
-                            <input
-                                type="text"
-                                className="w-full border border-gray-300 rounded-md p-2 mb-4"
-                                value={muscle}
-                                onChange={(e) => setMuscle(e.target.value)}
-                            />
-                            <div className="flex justify-end">
-                                <button className="bg-[#B09C93] text-white rounded-lg p-2" onClick={handleMuscleChange}>저장</button>
-                            </div>
-                        </div>
-                    </div>
-                )}
-                {editingFat && (
-                    <div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
-                        <div className="bg-white p-8 rounded-lg shadow-md">
-                            <h3 className="text-xl font-bold mb-4">골격근량</h3>
-                            <input
-                                type="text"
-                                className="w-full border border-gray-300 rounded-md p-2 mb-4"
-                                value={fat}
-                                onChange={(e) => setFat(e.target.value)}
-                            />
-                            <div className="flex justify-end">
-                                <button className="bg-[#B09C93] text-white rounded-lg p-2" onClick={handleFatChange}>저장</button>
-                            </div>
-                        </div>
-                    </div>
-                )}
+                </div>
+
+                <div className="flex justify-center mt-10">
+                    <button className="px-6 py-2 bg-[#E2D7D2] text-[#401C0C] rounded-3xl" style={{width:'100px'}} onClick={handleEdit}>
+                        {isEditing ? 'Save' : 'Edit'}
+                    </button>
+                </div>
             </div>
-
-
-
-
-
-            
-
-                </div>
-
-
         </section>
+        <button
+        className="w-full block text-dark-color hover:text-white underline hover:text-white"
+        onClick={handleLogout}
+      >
+        Logout
+      </button>
+      </div>
     );
-}
+};
 
 export default MyPage;

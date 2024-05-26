@@ -1,54 +1,74 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CustomCalendar from "./component/Calendar";
 import FitlmPhoto from "./component/FitlmPhoto";
-
-const exerciseData = {
-  "2024-05-15": {
-    image:
-      "https://images.pexels.com/photos/12066797/pexels-photo-12066797.jpeg",
-    time: "70min",
-    type: "Leg Day",
-    motivation: "나약해진 내 자신 지금 내가 하는건 재활운동..",
-    count: 7,
-    date: "2024-05-15",
-    emotion: "ok",
-  },
-  "2024-05-16": {
-    image:
-      "https://images.pexels.com/photos/12066797/pexels-photo-12066797.jpeg",
-    time: "60min",
-    type: "Arm Day",
-    motivation: "힘내자! 오늘도 파이팅!",
-    count: 7,
-    date: "2024-05-16",
-    emotion: "really_love",
-  },
-};
+import axiosInstance from '../../utils/axios';
 
 const CalendarPage = () => {
+  const limit = 4;
+  const [exerciseData, setExerciseData] = useState({});
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [exerciseInfo, setExerciseInfo] = useState(
-    exerciseData[selectedDate.toISOString().split("T")[0]] || {}
-  );
+  const [exerciseInfo, setExerciseInfo] = useState({});
   const [isFlipped, setIsFlipped] = useState(false);
+  const [skip] = useState(0);
+
+  useEffect(() => {
+    fetchExerciseData({ skip, limit });
+  }, [skip]);  // `skip`을 의존성 배열에 추가합니다.
+
+  const fetchExerciseData = async ({ skip, limit, loadMore = false }) => {
+    const params = {
+      skip,
+      limit,
+    };
+
+    try {
+      const response = await axiosInstance.get("/products", { params });
+
+      const newExerciseData = response.data.products.reduce((acc, item) => {
+        const date = new Date(item.uploadDate);
+        date.setHours(date.getHours() + 9); // 한국 시간 기준으로 변환
+        const formattedDate = date.toISOString().split("T")[0];
+        acc[formattedDate] = {
+          image: item.images[0] || null,
+          time: `${item.exerciseTime}min`,
+          type: item.exercisePart,
+          motivation: item.memo,
+          count: 7,
+          date: formattedDate,
+          emotion: item.satisfaction,
+        };
+        return acc;
+      }, {});
+
+      if (loadMore) {
+        setExerciseData((prevData) => ({ ...prevData, ...newExerciseData }));
+      } else {
+        setExerciseData(newExerciseData);
+      }
+    } catch (error) {
+      console.error("Error fetching exercise data:", error);
+    }
+  };
 
   const handleDateChange = (date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const formattedDate = `${year}-${month}-${day}`;
+    setSelectedDate(date);
+    setIsFlipped(false); // 날짜 변경 시 isFlipped 상태 초기화
+  };
+
+  useEffect(() => {
+    const date = new Date(selectedDate);
+    date.setHours(date.getHours() + 9); // 한국 시간 기준으로 변환
+    const formattedDate = date.toISOString().split("T")[0];
     const selectedExerciseInfo = exerciseData[formattedDate] || {
       date: formattedDate,
       count: 0,
     };
-    setSelectedDate(date);
     setExerciseInfo(selectedExerciseInfo);
-    setIsFlipped(false); // 날짜 변경 시 isFlipped 상태 초기화
-  };
+  }, [selectedDate, exerciseData]);
 
   return (
-    <div className="flex flex-col justify-start items-center">
-      <div className="flex flex-row items-center space-x-7">
+    <div className="flex flex-col justify-center items-center mr-40">
+      <div className="flex flex-row items-center justify-start space-x-8">
         <FitlmPhoto
           exerciseInfo={exerciseInfo}
           isFlipped={isFlipped}

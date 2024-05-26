@@ -2,35 +2,34 @@ import React from "react";
 import Footer from "./Footer";
 
 const emotionIcons = {
-  bad: "/assets/status/bad.png",
-  cry: "/assets/status/cry.png",
-  ji: "/assets/status/ji.png",
-  ok: "/assets/status/ok.png",
-  really_love: "/assets/status/really_love.png",
-  want: "/assets/status/want.png",
+  1: "/assets/status/1.png",
+  2: "/assets/status/2.png",
+  3: "/assets/status/3.png",
+  4: "/assets/status/4.png",
+  5: "/assets/status/5.png",
+  6: "/assets/status/6.png",
+  7: "/assets/status/7.png",
 };
 
 const BackCard = ({ handleFlip, exerciseInfo }) => (
   <div className="flex flex-col items-center justify-center w-full h-full bg-white rounded-lg">
     {exerciseInfo.image ? (
-      <div className="bg-light-color mt-3 object-cover w-full h-full flex flex-col items-center justify-around border-l-15 border-r-15 border-white">
-        <p className="text-lg font-semibold text-semi-dark-color">
-          {exerciseInfo.time || "N/A"}
+      <div className="bg-light-color mt-3 object-cover w-full h-full flex flex-col items-center justify-evenly border-l-15 border-r-15 border-white">
+        <p className="text-2xl font-semibold text-semi-dark-color">
+          {exerciseInfo.time}
         </p>
-        <p className="text-lg font-semibold text-semi-dark-color">
-          {exerciseInfo.type || "N/A"}
+        <p className="text-2xl font-semibold text-semi-dark-color">
+          {exerciseInfo.type}
         </p>
         <div className="flex items-center justify-center">
           <img
-            src={
-              emotionIcons[exerciseInfo.emotion] || "/assets/status/default.png"
-            }
+            src={emotionIcons[exerciseInfo.emotion]}
             alt={exerciseInfo.emotion}
-            className="w-19 h-25"
+            className="h-28 object-cover"
           />
         </div>
-        <p className="text-xs font-semilight text-semi-dark-color">
-          {exerciseInfo.motivation || "No data available for this date."}
+        <p className="text-lg font-normal text-semi-dark-color">
+          {exerciseInfo.motivation}
         </p>
       </div>
     ) : (

@@ -8,7 +8,7 @@ const FrontCard = ({ handleFlip, exerciseInfo }) => {
     <div className="flex flex-col items-center justify-center w-full h-full bg-white rounded-lg">
       {image ? (
         <img
-          src={image}
+          src={`${import.meta.env.VITE_SERVER_URL}/${image}`}
           alt="User Workout"
           className="pt-5 object-cover w-[20vw] h-[70vh] max-h-[70vh]"
         />

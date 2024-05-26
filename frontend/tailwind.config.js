@@ -8,6 +8,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        inter: ['Inter'],
+      },
       textShadow: {
         sm: "0px 1px 1px var(--tw-shadow-color)",
         DEFAULT: "2px 2px 4px var(--tw-shadow-color)",
@@ -26,6 +29,9 @@ module.exports = {
         8: "8px",
         10: "10px",
         15: "15px",
+      },
+      spacing: {
+        '9/10': '90%',
       },
     },
   },

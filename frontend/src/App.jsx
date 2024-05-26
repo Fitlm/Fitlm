@@ -33,11 +33,11 @@ function Layout() {
       />
       <div className="flex flex-row h-full w-full">
         <Navbar className="w-1/6 h-full" />
-        <main className="flex-1 max-w-4xl mx-auto">
+        <main className="flex-1 flex items-center justify-center mx-auto">
           <Outlet />
         </main>
-        <Footer className="w-full" />
       </div>
+      <Footer className="w-full" />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import SearchInput from "./Sections/SearchInput";
 import CardItem from "./Sections/CardItem";
 import axiosInstance from "../../utils/axios";
@@ -10,11 +10,7 @@ const LandingPage = () => {
   const [skip, setSkip] = useState(0);
   const [hasMore, setHasMore] = useState(false);
 
-  useEffect(() => {
-    fetchProducts({ skip, limit });
-  }, []);
-
-  const fetchProducts = async ({
+  const fetchProducts = useCallback(async ({
     skip,
     limit,
     loadMore = false,
@@ -32,7 +28,7 @@ const LandingPage = () => {
       const response = await axiosInstance.get("/products", { params });
 
       if (loadMore) {
-        setProducts([...products, ...response.data.products]);
+        setProducts((prevProducts) => [...prevProducts, ...response.data.products]);
       } else {
         setProducts(response.data.products);
       }
@@ -40,7 +36,11 @@ const LandingPage = () => {
     } catch (error) {
       console.error(error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchProducts({ skip, limit });
+  }, [fetchProducts, skip]);
 
   const handleLoadMore = () => {
     const body = {
@@ -65,7 +65,7 @@ const LandingPage = () => {
   };
 
   return (
-    <section>
+    <section className="max-w-4xl">
       {/* Search */}
       <div className="flex justify-end mb-3">
         <SearchInput searchTerm={searchTerm} onSearch={handleSearchTerm} />
