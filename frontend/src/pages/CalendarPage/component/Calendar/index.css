@@ -27,11 +27,12 @@
 }
 
 .react-calendar__navigation__arrow {
+  background: none !important;
   font-size: 54px !important;
 }
 
 .react-calendar__navigation button:disabled {
-  color: #ccc;
+  background: none !important;
   cursor: default;
 }
 
