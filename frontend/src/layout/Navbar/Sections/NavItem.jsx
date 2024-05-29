@@ -16,7 +16,7 @@ const routes = [
 
 const NavItem = ({ mobile }) => {
   const isAuth = useSelector((state) => state.user?.isAuth);
-  
+
   const [showModal, setShowModal] = useState(false);
   const [data, setData] = useState([]);
 
@@ -42,11 +42,15 @@ const NavItem = ({ mobile }) => {
   }, []);
 
   return (
-    <div className={`text-dark-color font-bold text-xl ${mobile ? "bg-gray-900 h-screen" : ""}`}>
+    <div
+      className={`text-dark-color font-bold text-xl h-full ${
+        mobile ? "bg-gray-900" : ""
+      }`}
+    >
       <ul
-        className={`text-md w-full flex ${
+        className={`text-md w-full ${isAuth ? "h-4/5" : "h-2/5"} flex ${
           mobile ? "flex-col" : "flex-col"
-        } items-center`}
+        } items-start justify-between`}
       >
         {routes.map(({ to, name, auth }) => {
           if (auth !== null && isAuth !== auth) return null;
@@ -54,17 +58,19 @@ const NavItem = ({ mobile }) => {
           if (name === "Upload" && isAuth) {
             return (
               <React.Fragment key={name}>
-                <li className="py-16 w-full text-left cursor-pointer">
+                <li className="w-full text-left cursor-pointer">
                   <NavLink
                     to={to}
                     className={({ isActive }) =>
-                      `w-full block ${isActive ? "text-white" : ""} hover:text-white`
+                      `w-full block ${
+                        isActive ? "text-white" : ""
+                      } hover:text-white`
                     }
                   >
                     {name}
                   </NavLink>
                 </li>
-                <li className="py-16 w-full cursor-pointer">
+                <li className="w-full cursor-pointer">
                   <button
                     className="w-full block text-left hover:text-white"
                     onClick={handleNotificationClick}
@@ -77,11 +83,13 @@ const NavItem = ({ mobile }) => {
           }
 
           return (
-            <li key={name} className="py-16 w-full text-left cursor-pointer">
+            <li key={name} className="w-full text-left cursor-pointer">
               <NavLink
                 to={to}
                 className={({ isActive }) =>
-                  `w-full block ${isActive ? "text-white" : ""} hover:text-white`
+                  `w-full block ${
+                    isActive ? "text-white" : ""
+                  } hover:text-white`
                 }
               >
                 {name}

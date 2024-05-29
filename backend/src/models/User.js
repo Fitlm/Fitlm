@@ -31,7 +31,7 @@ const userSchema = mongoose.Schema({
 
   image: String,
 
-  userNickname: { type: String, default: [] },
+  userNickname: { type: String },
 
   profile: {
     // 프로필 정보
