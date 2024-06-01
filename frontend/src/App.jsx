@@ -1,6 +1,5 @@
 import "./App.css";
 import { Outlet, Route, Routes, useLocation } from "react-router-dom";
-import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import Navbar from "./layout/Navbar";
@@ -20,20 +19,27 @@ import UploadProductPage from "./pages/UploadProductPage";
 import Mypage from "./pages/MyPage";
 import CalendarPage from "./pages/CalendarPage";
 import Logo from "./components/Logo";
+import PictureBoardPage from "./pages/PictureBoardPage";
 
 function Layout() {
+  const isAuth = useSelector((state) => state.user?.isAuth);
+
   return (
-    <div className="flex flex-col items-center h-screen bg-[#e2d7d2]">
-      <Logo />
+    <div className="flex flex-col items-center h-screen bg-[#e2d7d2] overflow-hidden">
+      {isAuth && <Logo />}
       <ToastContainer
         position="bottom-right"
         theme="light"
         pauseOnHover
         autoClose={1500}
       />
-      <div className="flex flex-row h-full w-full">
-        <Navbar className="w-1/6 h-full" />
-        <main className="flex-1 flex items-center justify-center mx-auto">
+      <div className="flex flex-row w-full h-full">
+        {isAuth && <Navbar className="w-1/6 h-full" />}
+        <main
+          className={`flex-1 flex items-center justify-center mx-auto w-full ${
+            isAuth ? "" : "pl-0"
+          }`}
+        >
           <Outlet />
         </main>
       </div>
@@ -41,7 +47,6 @@ function Layout() {
     </div>
   );
 }
-
 function App() {
   const dispatch = useDispatch();
   const isAuth = useSelector((state) => state.user?.isAuth);
@@ -55,7 +60,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        <Route index element={<LandingPage />} />
+        <Route index element={isAuth ? <PictureBoardPage /> : <LoginPage />} />
 
         {/*로그인한 사람만 갈 수 있는 경로 */}
         <Route element={<ProtectedRoutes isAuth={isAuth} />}>

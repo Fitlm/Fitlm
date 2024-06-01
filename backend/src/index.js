@@ -10,7 +10,7 @@ const port = 4000;
 dotenv.config();
 
 // MongoDB에 연결
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         console.log('Connected to MongoDB');
         // 가짜 데이터 생성
