@@ -1,65 +1,165 @@
-import React from "react";
-import FileUpload from "../components/FileUpload";
+import React, { useCallback } from "react";
+import Dropzone from "react-dropzone";
+import { ResizableBox } from "react-resizable";
+import PropTypes from "prop-types";
+import "react-resizable/css/styles.css"; // 기본 스타일 가져오기
+import "./styles.css"; // 추가된 스타일 가져오기
+import { LuRefreshCcw } from "react-icons/lu";
+import axiosInstance from "../../../../utils/axios";
 
-const colors = [
-  "#FFE7E7",
-  "#F3FFE7",
-  "#DFF9FF",
-  "#F2E7FF",
-  "#F1EBE9",
-  "#FFFFFF",
-  "#111111",
-]; // 색상 목록
-
-const FirstPage = ({
+const FileUpload = ({
   onImageChange,
   image,
-  onColorChange,
   color,
   bgDimensions,
   imgDimensions,
   setBgDimensions,
   setImgDimensions,
 }) => {
-  const handleColorClick = (event, colorOption) => {
-    event.preventDefault(); // 기본 동작 방지
-    onColorChange(colorOption);
-  };
+  const handleDrop = useCallback(
+    async (files) => {
+      let formData = new FormData();
+      const config = {
+        headers: { "content-type": "multipart/form-data" },
+      };
+
+      formData.append("file", files[0]);
+
+      try {
+        const response = await axiosInstance.post(
+          "/products/image",
+          formData,
+          config
+        );
+        console.log("Image upload response:", response.data);
+        if (response.data.fileId) {
+          onImageChange(response.data.fileId);
+        } else {
+          console.error("Failed to receive file ID");
+        }
+      } catch (error) {
+        console.error("Image upload error:", error);
+      }
+    },
+    [onImageChange]
+  );
+
+  const onBgResize = useCallback(
+    (event, { size }) => {
+      setBgDimensions({ width: size.width, height: size.height });
+    },
+    [setBgDimensions]
+  );
+
+  const onImgResize = useCallback(
+    (event, { size }) => {
+      setImgDimensions({ width: size.width, height: size.height });
+    },
+    [setImgDimensions]
+  );
+
+  const today = new Date()
+    .toLocaleDateString("ko-KR", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    })
+    .replace(/\. /g, ".")
+    .replace(/\.$/, "");
 
   return (
-    <section className="w-full h-full flex items-center justify-center">
-      <form className="w-full h-full flex flex-row items-center justify-start">
-        <div className="pr-20">
-          <FileUpload
-            image={image}
-            onImageChange={onImageChange}
-            color={color}
-            bgDimensions={bgDimensions}
-            imgDimensions={imgDimensions}
-            setBgDimensions={setBgDimensions}
-            setImgDimensions={setImgDimensions}
-          />
+    <div className="flex justify-center items-center">
+      {image ? (
+        <div style={{ position: "relative", padding: "20px" }}>
+          <ResizableBox
+            width={bgDimensions.width}
+            height={bgDimensions.height}
+            onResize={onBgResize}
+            resizeHandles={["s", "e", "se"]}
+            minConstraints={[
+              imgDimensions.width + 40,
+              imgDimensions.height + 40,
+            ]}
+            style={{ padding: "20px" }} // Add padding for the resize handles
+          >
+            <div
+              className="border flex flex-col justify-center items-center"
+              style={{
+                width: "100%",
+                height: "100%",
+                backgroundColor: color,
+                boxSizing: "border-box",
+                position: "relative",
+              }}
+            >
+              <ResizableBox
+                width={imgDimensions.width}
+                height={imgDimensions.height}
+                onResize={onImgResize}
+                resizeHandles={["s", "e", "se"]}
+                minConstraints={[100, 120]}
+                maxConstraints={[
+                  bgDimensions.width - 40,
+                  bgDimensions.height - 40,
+                ]}
+                style={{ position: "relative" }}
+              >
+                <img
+                  className="object-cover w-full h-full"
+                  src={`${
+                    import.meta.env.VITE_SERVER_URL
+                  }/products/image/${image}`}
+                  alt={image}
+                />
+              </ResizableBox>
+              <div
+                className="flex flex-row justify-between items-end mt-2"
+                style={{
+                  width: imgDimensions.width,
+                  height: imgDimensions.height * 0.2,
+                  fontSize: imgDimensions.width * 0.04,
+                }}
+              >
+                <div className="flex items-center">
+                  <span className="ml-2 font-semibold text-dark-color">0</span>
+                  <LuRefreshCcw className="font-black text-dark-color" />
+                </div>
+                <span className="font-semibold text-dark-color">{today}</span>
+              </div>
+            </div>
+          </ResizableBox>
         </div>
-        <div className="flex flex-col items-start">
-          <h3 className="mb-4 text-left text-dark-color font-semibold">
-            Frame Color
-          </h3>
-          <div className="flex space-x-2">
-            {colors.map((colorOption) => (
-              <button
-                key={colorOption}
-                className={`w-8 h-8 rounded-full ${
-                  colorOption === "#FFFFFF" ? "border border-black" : ""
-                }`}
-                style={{ backgroundColor: colorOption }}
-                onClick={(event) => handleColorClick(event, colorOption)}
-              />
-            ))}
-          </div>
-        </div>
-      </form>
-    </section>
+      ) : (
+        <Dropzone onDrop={handleDrop}>
+          {({ getRootProps, getInputProps }) => (
+            <section
+              className="flex items-center justify-center cursor-pointer bg-light-color border p-2"
+              style={{ width: 400, height: 480 }}
+            >
+              <div {...getRootProps()}>
+                <input {...getInputProps()} />
+                <img
+                  src="/src/assets/icons/upload_image.png"
+                  alt="Upload"
+                  className="w-16 h-16"
+                />
+              </div>
+            </section>
+          )}
+        </Dropzone>
+      )}
+    </div>
   );
 };
 
-export default FirstPage;
+FileUpload.propTypes = {
+  onImageChange: PropTypes.func.isRequired,
+  image: PropTypes.string,
+  color: PropTypes.string.isRequired,
+  bgDimensions: PropTypes.object.isRequired,
+  imgDimensions: PropTypes.object.isRequired,
+  setBgDimensions: PropTypes.func.isRequired,
+  setImgDimensions: PropTypes.func.isRequired,
+};
+
+export default FileUpload;
