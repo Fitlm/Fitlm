@@ -1,37 +1,21 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import axiosInstance from "../../utils/axios";
-import FileUpload from "../../components/UploadModal/ModalPages/components/FileUpload"; // 올바른 경로로 수정
+import React from "react";
 import PropTypes from "prop-types";
-import InputBox from "./component/InputBox";
+import FileUpload from "../components/FileUpload";
+import InputBox from "./components/InputBox";
+import axiosInstance from "../../../../utils/axios";
 
-const UploadProductPage = ({ closeModal }) => {
-  const [product, setProduct] = useState({
-    images: [], // 이미지 배열로 변경
-    exercisePart: "",
-    exerciseTime: 0,
-    satisfaction: 0,
-    memo: "",
-  });
-
-  const userData = useSelector((state) => state.user?.userData);
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setProduct((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  const handleImageChange = (newImage) => {
-    console.log("Image ID received from FileUpload:", newImage);
-    setProduct((prevState) => ({
-      ...prevState,
-      images: [...prevState.images, newImage], // 배열에 이미지 추가
-    }));
-  };
-
+const SecondPage = ({
+  closeModal,
+  product,
+  handleChange,
+  handleImageChange,
+  userData,
+  color,
+  bgDimensions,
+  imgDimensions,
+  setBgDimensions,
+  setImgDimensions,
+}) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -51,37 +35,45 @@ const UploadProductPage = ({ closeModal }) => {
   };
 
   return (
-    <section className="">
-      <form className="flex flex-row items-center" onSubmit={handleSubmit}>
-        <div className="w-1/2 h-4/5 pr-20">
+    <section className="w-full h-full flex items-center justify-center">
+      <form
+        className="w-full h-full flex flex-row items-center"
+        onSubmit={handleSubmit}
+      >
+        <div className="pr-20">
           <FileUpload
             image={product.images[0]}
             onImageChange={handleImageChange}
+            color={color}
+            bgDimensions={bgDimensions}
+            imgDimensions={imgDimensions}
+            setBgDimensions={setBgDimensions}
+            setImgDimensions={setImgDimensions}
           />
         </div>
-        <div className="w-1/2">
+        <div className="">
           <InputBox
-            label="운동 부위"
+            label="부위"
             name="exercisePart"
             value={product.exercisePart}
             onChange={handleChange}
           />
           <InputBox
-            label="운동 시간(분 단위)"
+            label="시간"
             name="exerciseTime"
             type="number"
             value={product.exerciseTime}
             onChange={handleChange}
           />
           <InputBox
-            label="운동 만족도"
+            label="만족도"
             name="satisfaction"
             type="number"
             value={product.satisfaction}
             onChange={handleChange}
           />
           <InputBox
-            label="추가 메모"
+            label="메모"
             name="memo"
             value={product.memo}
             onChange={handleChange}
@@ -100,8 +92,17 @@ const UploadProductPage = ({ closeModal }) => {
   );
 };
 
-UploadProductPage.propTypes = {
+SecondPage.propTypes = {
   closeModal: PropTypes.func.isRequired,
+  product: PropTypes.object.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  handleImageChange: PropTypes.func.isRequired,
+  userData: PropTypes.object.isRequired,
+  color: PropTypes.string.isRequired,
+  bgDimensions: PropTypes.object.isRequired,
+  imgDimensions: PropTypes.object.isRequired,
+  setBgDimensions: PropTypes.func.isRequired,
+  setImgDimensions: PropTypes.func.isRequired,
 };
 
-export default UploadProductPage;
+export default SecondPage;

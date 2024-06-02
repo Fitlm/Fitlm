@@ -1,119 +1,66 @@
-import React, { useEffect } from "react";
-import "./css/styles.css";
-// Pretendard 웹폰트 추가
-import "https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css";
+// pages/PictureBoard.jsx
+import React, { useEffect, useState } from "react";
+import axiosInstance from "../../utils/axios";
+import UploadModal from "../../components/UploadModal";
 
-function App() {
-  const handleImageUpload = (event) => {
-    const files = event.target.files;
-    console.log(files);
-  };
+const PictureBoard = () => {
+  const [images, setImages] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 추가
 
   useEffect(() => {
-    const scriptResource = document.createElement("script");
-    scriptResource.src = "scripts/resource.js";
-    scriptResource.async = true;
+    const fetchImages = async () => {
+      try {
+        const response = await axiosInstance.get("/products", {
+          params: { limit: 30, sortBy: "uploadDate", order: "desc" },
+        });
+        console.log("Fetched products:", response.data.products);
 
-    const scriptSet = document.createElement("script");
-    scriptSet.src = "scripts/set.js";
-    scriptSet.async = true;
+        const allImages = response.data.products.flatMap((product) => {
+          console.log("Product images:", product.images);
+          return product.images || []; // 이미지가 없을 경우 빈 배열 반환
+        });
 
-    const scriptDrag = document.createElement("script");
-    scriptDrag.src = "scripts/drag.js";
-    scriptDrag.async = true;
-
-    const scriptFlip = document.createElement("script");
-    scriptFlip.src = "scripts/flip.js";
-    scriptFlip.async = true;
-
-    const scriptUproad = document.createElement("script");
-    scriptUproad.src = "scripts/uproad.js";
-    scriptUproad.async = true;
-
-    document.body.appendChild(scriptResource);
-    document.body.appendChild(scriptSet);
-    document.body.appendChild(scriptDrag);
-    document.body.appendChild(scriptFlip);
-    document.body.appendChild(scriptUproad);
-
-    return () => {
-      document.body.removeChild(scriptResource);
-      document.body.removeChild(scriptSet);
-      document.body.removeChild(scriptDrag);
-      document.body.removeChild(scriptFlip);
-      document.body.removeChild(scriptUproad);
+        console.log("Images to be displayed:", allImages);
+        setImages(allImages);
+      } catch (error) {
+        console.error("Error fetching images:", error);
+      }
     };
+
+    fetchImages();
   }, []);
 
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
   return (
-    <div id="headerContainer">
-      <div id="contentContainer">
-        <div id="mainContent">
-          <div id="boardContainer">
-            <div id="topContainer">
-              <label>
-                <button id="show">All Days</button>
-              </label>
-            </div>
-            <div id="imageContainer"></div>
-            <div id="transformContainer">
-              <label>
-                <button id="move">
-                  MOVE
-                  <img
-                    src="./images/move.png"
-                    className="Buttonicon"
-                    alt="Move Icon"
-                  />
-                </button>
-                <button id="tilt">
-                  ROTATE
-                  <img
-                    src="./images/tilt.png"
-                    className="Buttonicon"
-                    alt="Rotate Icon"
-                  />
-                </button>
-              </label>
-            </div>
-            <div id="uproadContainer">
-              <label>
-                <button id="capture">
-                  CAPTURE
-                  <img
-                    src="./images/capture.png"
-                    className="Buttonicon"
-                    alt="Capture Icon"
-                  />
-                </button>
-              </label>
-              <label>
-                <button
-                  id="uproad"
-                  onClick={() => document.getElementById("imageUpload").click()}
-                >
-                  UPLOAD
-                  <img
-                    src="./images/uproad.png"
-                    className="Buttonicon"
-                    alt="Upload Icon"
-                  />
-                </button>
-                <input
-                  type="file"
-                  id="imageUpload"
-                  accept="image/*"
-                  multiple
-                  style={{ display: "none" }}
-                  onChange={handleImageUpload}
-                />
-              </label>
-            </div>
+    <div className="flex flex-col items-center">
+      <button
+        className="mb-4 px-4 py-2 text-white bg-black rounded-md hover:bg-gray-700"
+        onClick={toggleModal}
+      >
+        Upload New Product
+      </button>
+      {isModalOpen && <UploadModal closeModal={toggleModal} />}
+      <div className="grid grid-cols-3 gap-4">
+        {images.map((imageId, index) => (
+          <div key={index} className="w-full h-64">
+            <img
+              className="object-cover w-full h-full"
+              src={`${
+                import.meta.env.VITE_SERVER_URL
+              }/products/image/${imageId}`}
+              alt={`Product ${imageId}`}
+              onError={(e) =>
+                console.error(`Error loading image with ID: ${imageId}`, e)
+              }
+            />
           </div>
-        </div>
+        ))}
       </div>
     </div>
   );
-}
+};
 
-export default App;
+export default PictureBoard;
