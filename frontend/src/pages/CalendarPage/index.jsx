@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CustomCalendar from "./component/Calendar";
 import FitlmPhoto from "./component/FitlmPhoto";
-import axiosInstance from '../../utils/axios';
+import axiosInstance from "../../utils/axios";
 
 const CalendarPage = () => {
   const limit = 4;
@@ -13,7 +13,7 @@ const CalendarPage = () => {
 
   useEffect(() => {
     fetchExerciseData({ skip, limit });
-  }, [skip]);  // `skip`을 의존성 배열에 추가합니다.
+  }, [skip]);
 
   const fetchExerciseData = async ({ skip, limit, loadMore = false }) => {
     const params = {
@@ -23,13 +23,17 @@ const CalendarPage = () => {
 
     try {
       const response = await axiosInstance.get("/products", { params });
+      console.log("Fetched exercise data:", response.data);
 
       const newExerciseData = response.data.products.reduce((acc, item) => {
         const date = new Date(item.uploadDate);
         date.setHours(date.getHours() + 9); // 한국 시간 기준으로 변환
         const formattedDate = date.toISOString().split("T")[0];
         acc[formattedDate] = {
-          image: item.images[0] || null,
+          image:
+            Array.isArray(item.images) && item.images.length > 0
+              ? item.images[0]
+              : null,
           time: `${item.exerciseTime}min`,
           type: item.exercisePart,
           motivation: item.memo,
