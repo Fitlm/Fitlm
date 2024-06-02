@@ -37,7 +37,7 @@ const SecondPage = ({
   return (
     <section className="w-full h-full flex items-center justify-center">
       <form
-        className="w-full h-full flex flex-row items-center"
+        className="w-full h-full flex flex-row items-center justify-start"
         onSubmit={handleSubmit}
       >
         <div className="pr-20">

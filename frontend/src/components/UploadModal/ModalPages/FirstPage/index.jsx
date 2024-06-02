@@ -28,7 +28,7 @@ const FirstPage = ({
 
   return (
     <section className="w-full h-full flex items-center justify-center">
-      <form className="w-full h-full flex flex-row items-center">
+      <form className="w-full h-full flex flex-row items-center justify-start">
         <div className="pr-20">
           <FileUpload
             image={image}
@@ -48,7 +48,9 @@ const FirstPage = ({
             {colors.map((colorOption) => (
               <button
                 key={colorOption}
-                className="w-8 h-8 rounded-full"
+                className={`w-8 h-8 rounded-full ${
+                  colorOption === "#FFFFFF" ? "border border-black" : ""
+                }`}
                 style={{ backgroundColor: colorOption }}
                 onClick={(event) => handleColorClick(event, colorOption)}
               />
