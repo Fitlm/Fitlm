@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import NotificationModal from "../../../components/Notification";
 import axios from "axios"; // axios를 사용하여 백엔드 서버에 HTTP 요청을 보냅니다.
+import Logo from "../../../components/Logo";
 
 const routesBeforeNotification = [
   { to: "/", name: "PictureBoard(TEST)" },
@@ -17,6 +18,8 @@ const routesAfterNotification = [
 const NavItem = ({ mobile }) => {
   const [showModal, setShowModal] = useState(false);
   const [data, setData] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -31,6 +34,28 @@ const NavItem = ({ mobile }) => {
       console.error("Error fetching random quote:", error);
     }
   };
+
+  const handleLogoClick = () => {
+    if (isLoggedIn) {
+      navigate("/");
+    } else {
+      window.location.reload();
+    }
+  };
+
+  useEffect(() => {
+    // 로그인 상태를 확인하는 로직 추가
+    const checkLoginStatus = async () => {
+      try {
+        const response = await axios.get("http://localhost:4000/auth/status");
+        setIsLoggedIn(response.data.isLoggedIn);
+      } catch (error) {
+        console.error("Error checking login status:", error);
+      }
+    };
+
+    checkLoginStatus();
+  }, []);
 
   useEffect(() => {
     const fetchRandomQuote = async () => {
@@ -69,6 +94,9 @@ const NavItem = ({ mobile }) => {
           mobile ? "flex-col" : "flex-col"
         } items-start justify-between`}
       >
+        <li onClick={handleLogoClick} className="cursor-pointer">
+          <Logo />
+        </li>
         {routesBeforeNotification.map(({ to, name }) => (
           <li key={name} className="w-full text-left cursor-pointer">
             <NavLink

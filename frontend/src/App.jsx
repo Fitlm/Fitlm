@@ -23,7 +23,6 @@ function Layout() {
 
   return (
     <div className="flex flex-col items-center h-screen bg-[#e2d7d2] overflow-hidden">
-      {isAuth && <Logo />}
       <ToastContainer
         position="bottom-right"
         theme="light"
