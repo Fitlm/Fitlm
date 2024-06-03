@@ -6,7 +6,8 @@ import axios from "axios"; // axios를 사용하여 백엔드 서버에 HTTP 요
 import Logo from "../../../components/Logo";
 
 const routesBeforeNotification = [
-  { to: "/", name: "PictureBoard(TEST)" },
+  { to: "/", name: "PictureBoard" },
+  { to: "/test", name: "Test" },
   { to: "/product/upload", name: "Upload" },
 ];
 

@@ -15,7 +15,7 @@ import ProtectedPage from "./pages/ProtectedPage";
 import UploadProductPage from "./pages/UploadProductPage";
 import Mypage from "./pages/MyPage";
 import CalendarPage from "./pages/CalendarPage";
-import Logo from "./components/Logo";
+import TestPage from "./pages/TestPage";
 import PictureBoardPage from "./pages/PictureBoardPage";
 
 function Layout() {
@@ -60,6 +60,7 @@ function App() {
 
         {/*로그인한 사람만 갈 수 있는 경로 */}
         <Route element={<ProtectedRoutes isAuth={isAuth} />}>
+          <Route path="/test" element={<TestPage />} />
           <Route path="/protected" element={<ProtectedPage />} />
           <Route path="/product/upload" element={<UploadProductPage />} />
           <Route path="/mypage" element={<Mypage />} />

@@ -29,13 +29,10 @@ const MyPage = () => {
 
   return (
     <div className="h-full w-full flex flex-col items-center justify-center">
-      <section className="h-4/5 w-4/5 bg-light-color rounded-lg">
-        <div className="max-w-6xl mx-auto p-10">
+      <section className="h-4/5 w-4/5 bg-light-color rounded-lg flex flex-col items-center justify-center">
+        <div className="max-w-6xl w-full p-10">
           <div className="flex justify-center items-center p-6">
-            <div
-              className="flex items-center relative"
-              style={{ width: "800px" }}
-            >
+            <div className="flex items-center justify-center w-full">
               <img
                 src="images/FITLM.jpg"
                 alt=""
@@ -47,7 +44,7 @@ const MyPage = () => {
                   cursor: "pointer",
                 }}
               />
-              <div className="flex flex-col justify-center" style={{ flex: 1 }}>
+              <div className="flex flex-col items-center">
                 {isEditing ? (
                   <input
                     type="text"
@@ -59,10 +56,11 @@ const MyPage = () => {
                       color: "#B09C93",
                       border: "none",
                       height: "2rem",
+                      textAlign: "center",
                     }}
                   />
                 ) : (
-                  <p className="mb-1 text-xl font-bold text-[#401C0C]">
+                  <p className="mb-1 text-xl font-bold text-[#401C0C] text-center">
                     {name}
                   </p>
                 )}
@@ -77,10 +75,13 @@ const MyPage = () => {
                       color: "#B09C93",
                       border: "none",
                       height: "1.5rem",
+                      textAlign: "center",
                     }}
                   />
                 ) : (
-                  <p className="text-sm text-[#401C0C] pt-1">{nickname}</p>
+                  <p className="text-sm text-[#401C0C] pt-1 text-center">
+                    {nickname}
+                  </p>
                 )}
               </div>
             </div>
