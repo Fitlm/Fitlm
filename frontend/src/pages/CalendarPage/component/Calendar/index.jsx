@@ -4,13 +4,13 @@ import "react-calendar/dist/Calendar.css";
 import "./index.css";
 
 const emojiMap = {
-  1: "/assets/status/1.png",
-  2: "/assets/status/2.png",
-  3: "/assets/status/3.png",
-  4: "/assets/status/4.png",
-  5: "/assets/status/5.png",
-  6: "/assets/status/6.png",
-  7: "/assets/status/7.png",
+  emoji1: "/images/emoji/emoji1.svg",
+  emoji2: "/images/emoji/emoji2.svg",
+  emoji3: "/images/emoji/emoji3.svg",
+  emoji4: "/images/emoji/emoji4.svg",
+  emoji5: "/images/emoji/emoji5.svg",
+  emoji6: "/images/emoji/emoji6.svg",
+  emoji7: "/images/emoji/emoji7.svg",
 };
 
 const CustomCalendar = ({ onDateChange, exerciseData }) => {

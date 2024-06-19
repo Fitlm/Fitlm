@@ -36,16 +36,16 @@ const LoginPage = () => {
   };
 
   return (
-    <section className="flex flex-col justify-center mt-20 max-w-[400px] m-auto">
-      <div className="p-6 bg-light-color rounded-md shadow-md">
-        <h1 className="text-3xl text-dark-color font-semibold text-center">
+    <section className="flex flex-col items-center justify-center h-screen">
+      <div className="w-full max-w-md p-6 rounded-md shadow-md bg-light-color">
+        <h1 className="text-3xl font-semibold text-center text-dark-color">
           Fitlm
         </h1>
         <form className="mt-6" onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-2">
             <label
               htmlFor="email"
-              className="text-sm text-dark-color font-semibold"
+              className="text-sm font-semibold text-dark-color"
             >
               Email
             </label>
@@ -85,7 +85,7 @@ const LoginPage = () => {
           <div className="mt-6">
             <button
               type="submit"
-              className="w-full px-4 py-2 text-white duration-200 bg-dark-color rounded-md hover:bg-regular-color"
+              className="w-full px-4 py-2 text-white duration-200 rounded-md bg-dark-color hover:bg-regular-color"
             >
               로그인
             </button>

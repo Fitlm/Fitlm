@@ -1,41 +1,34 @@
-// models/Product.js
-const { default: mongoose, Schema } = require("mongoose");
+const mongoose = require("mongoose");
 
-const productSchema = mongoose.Schema({
-  writer: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-  },
-  title: {
+const productSchema = new mongoose.Schema({
+  userId: {
     type: String,
-    maxLength: 30,
+    default: "",
   },
-  description: String,
-  images: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Image",
-    },
-  ],
-  views: {
+  imageName: {
+    type: String,
+    default: "",
+  },
+  color: {
+    type: String,
+    default: "#ffffff",
+  },
+  flip: {
     type: Number,
     default: 0,
   },
-  uploadDate: {
-    type: Date,
-    default: Date.now,
-  },
-  exercisePart: {
+  date: {
     type: String,
-    required: true,
+    default: "",
   },
-  exerciseTime: {
-    type: Number,
-    required: true,
+  part: {
+    type: String,
   },
-  satisfaction: {
+  time: {
     type: Number,
-    required: true,
+  },
+  satisfactionId: {
+    type: String,
   },
   memo: {
     type: String,
@@ -43,15 +36,27 @@ const productSchema = mongoose.Schema({
   },
   x: {
     type: Number,
-    default: Math.random() * 100,
+    default: 0,
   },
   y: {
     type: Number,
-    default: Math.random() * 100,
+    default: 0,
   },
   rotate: {
+    type: String,
+    default: '0deg',
+  },
+  scale: {
     type: Number,
-    default: Math.random() * 360,
+    default: 1,
+  },
+  zindex: {
+    type: Number,
+    default: 2,
+  },
+  flip: {
+    type: Number,
+    default: 0,
   },
 });
 

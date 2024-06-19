@@ -1,15 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import NotificationModal from "../../../components/Notification";
 import axios from "axios"; // axios를 사용하여 백엔드 서버에 HTTP 요청을 보냅니다.
 import Logo from "../../../components/Logo";
 
-const routesBeforeNotification = [
-  { to: "/", name: "PictureBoard" },
-  { to: "/test", name: "Test" },
-  { to: "/product/upload", name: "Upload" },
-];
+const routesBeforeNotification = [{ to: "/", name: "PictureBoard" }];
 
 const routesAfterNotification = [
   { to: "/calendar", name: "Calendar" },
@@ -21,6 +17,8 @@ const NavItem = ({ mobile }) => {
   const [data, setData] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const isFirstLoad = useRef(true);
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -40,7 +38,7 @@ const NavItem = ({ mobile }) => {
     if (isLoggedIn) {
       navigate("/");
     } else {
-      window.location.reload();
+      navigate("/");
     }
   };
 
@@ -83,6 +81,14 @@ const NavItem = ({ mobile }) => {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (location.pathname === "/" && !isFirstLoad.current) {
+      window.location.reload();
+    } else {
+      isFirstLoad.current = false;
+    }
+  }, [location.pathname]);
 
   return (
     <div

@@ -9,7 +9,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        inter: ['Inter'],
+        inter: ["Inter"],
       },
       textShadow: {
         sm: "0px 1px 1px var(--tw-shadow-color)",
@@ -23,15 +23,22 @@ module.exports = {
         "regular-color": "#b09C93",
         "semi-light-color": "#e2d7d2",
         "light-color": "#f1ebe9",
+        "custom-bg": "#F1EBE9",
+        "custom-stroke": "#E2D7D2",
+        color4: "#FCF5F3",
       },
       borderWidth: {
+        3: "3px",
         6: "6px",
         8: "8px",
         10: "10px",
         15: "15px",
       },
       spacing: {
-        '9/10': '90%',
+        "9/10": "90%",
+      },
+      borderRadius: {
+        20: "20px",
       },
     },
   },

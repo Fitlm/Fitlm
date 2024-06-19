@@ -10,6 +10,8 @@
   position: relative;
   transform-style: preserve-3d;
   transition: transform 0.6s;
+  background-color: transparent !important;
+  border: transparent;
 }
 
 .is-flipped {
@@ -26,7 +28,6 @@
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  background: white;
 }
 
 .card__face--back {
